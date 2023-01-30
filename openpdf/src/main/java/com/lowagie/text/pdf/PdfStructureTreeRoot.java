@@ -19,7 +19,9 @@
  * Co-Developer of the code is Paulo Soares. Portions created by the Co-Developer
  * are Copyright (C) 2000, 2001, 2002 by Paulo Soares. All Rights Reserved.
  *
- * Contributor(s): all the names of the contributors are added in the source code
+ * Contributor(s): Certain Contributions were created by TIBCO Software Inc. Such
+ * Contributions are Copyright (C) 2015 by TIBCO Software Inc. All Rights Reserved.
+ * All the names of the other contributors are added in the source code
  * where applicable.
  *
  * Alternatively, the contents of this file may be used under the terms of the
@@ -125,7 +127,10 @@ public class PdfStructureTreeRoot extends PdfDictionary {
             List<PdfObject> a = ar.getElements();
             for (int k = 0; k < a.size(); ++k) {
                 PdfStructureElement e = (PdfStructureElement) a.get(k);
-                a.set(k, e.getReference());
+                // Cloud Software Group #1 : Part 1 - START
+                // set the reference in the original array
+                ar.set(k, e.getReference());
+                // Cloud Software Group #1 : Part 1 - END
                 nodeProcess(e, e.getReference());
             }
         }
