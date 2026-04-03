@@ -2376,6 +2376,17 @@ public class PdfWriter extends DocWriter implements
         return structureTreeRoot;
     }
 
+    /* Jaspersoft modification start */
+    /**
+	 * Sets the structure tree root. It is not advisable to use this method directly, but it can be useful when subclassing the PdfStructureTreeRoot.
+	 *
+	 * @param structureTreeRoot the structure tree root to set
+	 */
+    public void setStructureTreeRoot(PdfStructureTreeRoot structureTreeRoot) {
+        this.structureTreeRoot = structureTreeRoot;
+    }
+    /* Jaspersoft modification end */
+
     /**
      * Use this method to get the <B>Optional Content Properties Dictionary</B>. Each call fills the dictionary with the
      * current layer state. It's advisable to only call this method right before close and do any modifications at that
