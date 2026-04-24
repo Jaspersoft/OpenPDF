@@ -76,7 +76,8 @@ public class PdfStructureTreeRoot extends PdfDictionary {
     /**
      * Creates a new instance of PdfStructureTreeRoot
      */
-    PdfStructureTreeRoot(PdfWriter writer) {
+    /* Jaspersoft modification: made protected */
+    protected PdfStructureTreeRoot(PdfWriter writer) {
         super(PdfName.STRUCTTREEROOT);
         this.writer = writer;
         reference = writer.getPdfIndirectReference();
@@ -177,7 +178,8 @@ public class PdfStructureTreeRoot extends PdfDictionary {
         }
     }
 
-    void buildTree() throws IOException {
+    /* Jaspersoft modification: made protected */
+    protected void buildTree() throws IOException {
         Map<Integer, PdfIndirectReference> numTree = new HashMap<>();
         for (Integer i : parentTree.keySet()) {
             PdfObject pdfObj = parentTree.get(i);
