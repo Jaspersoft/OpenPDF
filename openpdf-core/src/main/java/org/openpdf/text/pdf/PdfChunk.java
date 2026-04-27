@@ -91,6 +91,7 @@ public class PdfChunk {
         keysAttributes.put(Chunk.REMOTEGOTO, null);
         keysAttributes.put(Chunk.LOCALGOTO, null);
         keysAttributes.put(Chunk.LOCALDESTINATION, null);
+        keysAttributes.put(Chunk.LOCALDESTINATION_STRUCT, null);
         keysAttributes.put(Chunk.GENERICTAG, null);
         keysAttributes.put(Chunk.NEWPAGE, null);
         keysAttributes.put(Chunk.IMAGE, null);

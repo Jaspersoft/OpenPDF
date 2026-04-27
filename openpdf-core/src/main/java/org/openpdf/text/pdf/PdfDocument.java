@@ -1589,8 +1589,9 @@ public class PdfDocument extends Document {
                         if (nextChunk == null) {
                             subtract += hangingCorrection;
                         }
-                        localDestination((String) chunk.getAttribute(Chunk.LOCALDESTINATION),
-                                new PdfDestination(PdfDestination.XYZ, xMarker, yMarker + chunk.font().size(), 0));
+                        PdfDestination dest = new PdfDestination(PdfDestination.XYZ, xMarker, yMarker + chunk.font().size(), 0);
+                        PdfIndirectReference structRef = (PdfIndirectReference) chunk.getAttribute(Chunk.LOCALDESTINATION_STRUCT);
+                        localDestination((String) chunk.getAttribute(Chunk.LOCALDESTINATION), dest, structRef);
                     }
                     if (chunk.isAttribute(Chunk.GENERICTAG)) {
                         float subtract = lastBaseFactor;
@@ -2109,7 +2110,7 @@ public class PdfDocument extends Document {
         PdfAction action;
         Object[] obj = localDestinations.get(name);
         if (obj == null) {
-            obj = new Object[3];
+            obj = new Object[4];
         }
         if (obj[0] == null) {
             if (obj[1] == null) {
@@ -2134,14 +2135,19 @@ public class PdfDocument extends Document {
      * already existed
      */
     boolean localDestination(String name, PdfDestination destination) {
+        return localDestination(name, destination, null);
+    }
+
+    boolean localDestination(String name, PdfDestination destination, PdfIndirectReference structRef) {
         Object[] obj = localDestinations.get(name);
         if (obj == null) {
-            obj = new Object[3];
+            obj = new Object[4];
         }
         if (obj[2] != null) {
             return false;
         }
         obj[2] = destination;
+        obj[3] = structRef;
         localDestinations.put(name, obj);
         if (!destination.hasPage()) {
             destination.addPage(writer.getCurrentPage());
@@ -3373,13 +3379,28 @@ public class PdfDocument extends Document {
                     for (Map.Entry<String, Object[]> entry : localDestinations.entrySet()) {
                         String name = entry.getKey();
                         Object[] obj = entry.getValue();
-                        if (obj[2] == null) {
+                        PdfDestination destination = (PdfDestination) obj[2];
+                        if (destination == null) {
                             //no destination
                             continue;
                         }
                         PdfIndirectReference ref = (PdfIndirectReference) obj[1];
+                        PdfIndirectReference structRef = obj.length > 3 ? (PdfIndirectReference) obj[3] : null;
                         ar.add(new PdfString(name, null));
-                        ar.add(ref);
+                        if (structRef != null) {
+                            PdfDictionary destDict = new PdfDictionary();
+                            destDict.put(PdfName.D, ref);
+                            PdfArray sd = new PdfArray();
+                            sd.add(structRef);
+                            sd.add(destination.getPdfObject(1));
+                            sd.add(destination.getPdfObject(2));
+                            sd.add(destination.getPdfObject(3));
+                            sd.add(destination.getPdfObject(4));
+                            destDict.put(new PdfName("SD"), sd);
+                            ar.add(writer.addToBody(destDict).getIndirectReference());
+                        } else {
+                            ar.add(ref);
+                        }
                     }
                     if (ar.size() > 0) {
                         PdfDictionary dests = new PdfDictionary();
