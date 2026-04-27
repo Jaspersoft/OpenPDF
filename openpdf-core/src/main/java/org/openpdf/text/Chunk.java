@@ -54,6 +54,7 @@ import org.openpdf.text.pdf.HyphenationEvent;
 import org.openpdf.text.pdf.PdfAction;
 import org.openpdf.text.pdf.PdfAnnotation;
 import org.openpdf.text.pdf.PdfContentByte;
+import org.openpdf.text.pdf.PdfIndirectReference;
 import org.openpdf.text.pdf.draw.DrawInterface;
 import java.awt.Color;
 import java.net.URL;
@@ -157,6 +158,10 @@ public class Chunk implements Element {
      * Key for local destination.
      */
     public static final String LOCALDESTINATION = "LOCALDESTINATION";
+    /**
+     * Key for local destination structure element reference.
+     */
+    public static final String LOCALDESTINATION_STRUCT = "LOCALDESTINATION_STRUCT";
     /**
      * Key for generic tag.
      */
@@ -728,6 +733,16 @@ public class Chunk implements Element {
      */
     public Chunk setLocalDestination(String name) {
         return setAttribute(LOCALDESTINATION, name);
+    }
+
+    /**
+     * Sets a structure element reference for the local destination, making it a structure destination.
+     *
+     * @param structRef the indirect reference to the structure element
+     * @return this <CODE>Chunk</CODE>
+     */
+    public Chunk setLocalDestinationStructElement(PdfIndirectReference structRef) {
+        return setAttribute(LOCALDESTINATION_STRUCT, structRef);
     }
 
     /**
