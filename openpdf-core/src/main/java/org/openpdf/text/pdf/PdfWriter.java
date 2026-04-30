@@ -411,6 +411,10 @@ public class PdfWriter extends DocWriter implements
      */
     public static final int PDFA3U = 10;
     /**
+     * PDFA-4 level.
+     */
+    public static final int PDFA4 = 11;
+    /**
      * No encryption
      */
     public static final int ENCRYPTION_NONE = -1;
@@ -1334,7 +1338,11 @@ public class PdfWriter extends DocWriter implements
                 // add the Catalog to the body
                 PdfIndirectObject indirectCatalog = addToBody(catalog, false);
                 // add the info-object to the body
-                PdfIndirectObject infoObj = addToBody(getInfo(), false);
+                PdfIndirectReference infoRef = null;
+                if (!pdfxConformance.isPdfA4()) {
+                    PdfIndirectObject infoObj = addToBody(getInfo(), false);
+                    infoRef = infoObj.getIndirectReference();
+                }
 
                 // [F1] encryption
                 PdfIndirectReference encryption = null;
@@ -1354,7 +1362,7 @@ public class PdfWriter extends DocWriter implements
 
                 // write the cross-reference table of the body
                 body.writeCrossReferenceTable(os, indirectCatalog.getIndirectReference(),
-                        infoObj.getIndirectReference(), encryption, fileID, prevxref);
+                        infoRef, encryption, fileID, prevxref);
 
                 os.write(getISOBytes("startxref\n"));
                 os.write(getISOBytes(String.valueOf(body.offset())));
@@ -1828,6 +1836,8 @@ public class PdfWriter extends DocWriter implements
         } else if (pdfx == PDFA2A || pdfx == PDFA2B || pdfx == PDFA2U
                 || pdfx == PDFA3A || pdfx == PDFA3B || pdfx == PDFA3U) {
             setPdfVersion(VERSION_1_7);
+        } else if (pdfx == PDFA4) {
+            setPdfVersion(VERSION_2_0);
         } else if (pdfx != PDFXNONE) {
             setPdfVersion(VERSION_1_3);
         }

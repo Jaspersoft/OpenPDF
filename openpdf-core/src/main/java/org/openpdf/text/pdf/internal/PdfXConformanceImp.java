@@ -301,12 +301,21 @@ public class PdfXConformanceImp implements PdfXConformance {
     }
 
     /**
+     * Checks if the PDF has to be in conformance with PDFA4
+     *
+     * @return true if the PDF has to be in conformance with PDFA4
+     */
+    public boolean isPdfA4() {
+        return pdfxConformance == PdfWriter.PDFA4;
+    }
+
+    /**
      * Checks if the PDF has to be in conformance with any PDF/A version
      *
      * @return true if the PDF has to be in conformance with any PDF/A version
      */
     public boolean isPdfA() {
-        return isPdfA1() || isPdfA2() || isPdfA3();
+        return isPdfA1() || isPdfA2() || isPdfA3() || isPdfA4();
     }
 
     public void completeInfoDictionary(PdfDictionary info) {
