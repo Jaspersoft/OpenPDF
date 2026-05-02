@@ -168,12 +168,12 @@ public class PdfXConformanceImp implements PdfXConformance {
                 break;
             case PDFXKEY_IMAGE:
                 PdfImage image = (PdfImage) obj1;
-                if (image.get(PdfName.SMASK) != null) {
-                    throw new PdfXConformanceException(
-                            MessageLocalization.getComposedMessage("the.smask.key.is.not.allowed.in.images"));
-                }
                 switch (conf) {
                     case PdfWriter.PDFX1A2001:
+                        if (image.get(PdfName.SMASK) != null) {
+                            throw new PdfXConformanceException(
+                                    MessageLocalization.getComposedMessage("the.smask.key.is.not.allowed.in.images"));
+                        }
                         PdfObject cs = image.get(PdfName.COLORSPACE);
                         if (cs == null) {
                             return;
@@ -188,6 +188,14 @@ public class PdfXConformanceImp implements PdfXConformance {
                                 throw new PdfXConformanceException(
                                         MessageLocalization.getComposedMessage("colorspace.calrgb.is.not.allowed"));
                             }
+                        }
+                        break;
+                    case PdfWriter.PDFX32002:
+                    case PdfWriter.PDFA1A:
+                    case PdfWriter.PDFA1B:
+                        if (image.get(PdfName.SMASK) != null) {
+                            throw new PdfXConformanceException(
+                                    MessageLocalization.getComposedMessage("the.smask.key.is.not.allowed.in.images"));
                         }
                         break;
                 }
