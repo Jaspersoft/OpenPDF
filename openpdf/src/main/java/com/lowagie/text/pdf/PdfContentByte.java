@@ -1735,7 +1735,8 @@ public class PdfContentByte {
     }
 
     /**
-     * Shows the <CODE>glyphVector</CODE>. Layout info in <CODE>glyphVector</CODE> is ignored
+     * Shows the <CODE>glyphVector</CODE>, honoring per-glyph position adjustments
+     * (e.g. from justified text layout).
      *
      * @param glyphVector containing the glyphs to write
      * @param beginIndex  index of first glyph
@@ -1746,9 +1747,44 @@ public class PdfContentByte {
             throw new NullPointerException(
                     MessageLocalization.getComposedMessage("font.and.size.must.be.set.before.writing.any.text"));
         }
-        byte[] b = state.fontDetails.convertToBytes(glyphVector, beginIndex, endIndex);
-        escapeString(b, content);
-        content.append("Tj").append_i(separator);
+
+        boolean hasPositionAdjustments = false;
+        float expectedX = (float) glyphVector.getGlyphPosition(beginIndex).getX();
+        for (int i = beginIndex; i < endIndex; i++) {
+            float actualX = (float) glyphVector.getGlyphPosition(i).getX();
+            float delta = actualX - expectedX;
+            if (Math.abs(delta) > 0.01f) {
+                hasPositionAdjustments = true;
+                break;
+            }
+            expectedX = actualX + glyphVector.getGlyphMetrics(i).getAdvance();
+        }
+
+        if (!hasPositionAdjustments) {
+            byte[] b = state.fontDetails.convertToBytes(glyphVector, beginIndex, endIndex);
+            escapeString(b, content);
+            content.append("Tj").append_i(separator);
+            return;
+        }
+
+        content.append("[");
+        expectedX = (float) glyphVector.getGlyphPosition(beginIndex).getX();
+        int segmentStart = beginIndex;
+        for (int i = beginIndex; i < endIndex; i++) {
+            float actualX = (float) glyphVector.getGlyphPosition(i).getX();
+            float delta = actualX - expectedX;
+            if (Math.abs(delta) > 0.01f && i > segmentStart) {
+                byte[] segmentBytes = state.fontDetails.convertToBytes(glyphVector, segmentStart, i);
+                escapeString(segmentBytes, content);
+                float tjDisplacement = -(delta * 1000f / state.size);
+                content.append(tjDisplacement);
+                segmentStart = i;
+            }
+            expectedX = actualX + glyphVector.getGlyphMetrics(i).getAdvance();
+        }
+        byte[] remaining = state.fontDetails.convertToBytes(glyphVector, segmentStart, endIndex);
+        escapeString(remaining, content);
+        content.append("]TJ").append_i(separator);
     }
 
     /**
