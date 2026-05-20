@@ -1749,50 +1749,39 @@ public class PdfContentByte {
                     MessageLocalization.getComposedMessage("font.and.size.must.be.set.before.writing.any.text"));
         }
         /* Jaspersoft modification start */
-        boolean needsAdjustment = false;
-        double curPos = 0;
+        boolean neededAdjustment = false;
+        double expectedPos = glyphVector.getGlyphPosition(beginIndex).getX();
+        int segmentStart = beginIndex;
         for (int i = beginIndex; i < endIndex; i++) {
             int glyphCode = glyphVector.getGlyphCode(i);
             if (glyphCode == 0xFFFE || glyphCode == 0xFFFF) {
                 continue;
             }
 
-            double targetPos = glyphVector.getGlyphPosition(i).getX();
-            if (Math.abs(curPos - targetPos) > GLYPH_POSITION_TOLERANCE) {
-                needsAdjustment = true;
-                break;
+            double actualPos = glyphVector.getGlyphPosition(i).getX();
+            double delta = actualPos - expectedPos;
+            if (Math.abs(delta) > GLYPH_POSITION_TOLERANCE && i > segmentStart) {
+                if (!neededAdjustment) {
+                    neededAdjustment = true;
+                    content.append("[");
+                }
+                byte[] segmentBytes = state.fontDetails.convertToBytes(glyphVector, segmentStart, i);
+                escapeAndAppendString(segmentBytes, content);
+                content.append(-(delta * 1000 / state.size));
+                segmentStart = i;
             }
-
-            curPos = targetPos + glyphVector.getGlyphMetrics(i).getAdvanceX();
+            expectedPos = actualPos + glyphVector.getGlyphMetrics(i).getAdvanceX();
         }
 
-        if (!needsAdjustment) {
+        if (!neededAdjustment) {
             byte[] b = state.fontDetails.convertToBytes(glyphVector, beginIndex, endIndex);
             escapeAndAppendString(b, content);
             content.append("Tj").append_i(separator);
-            return;
+        } else {
+            byte[] remaining = state.fontDetails.convertToBytes(glyphVector, segmentStart, endIndex);
+            escapeAndAppendString(remaining, content);
+            content.append("]TJ").append_i(separator);
         }
-
-        content.append("[");
-        curPos = 0;
-        for (int i = beginIndex; i < endIndex; i++) {
-            int glyphCode = glyphVector.getGlyphCode(i);
-            if (glyphCode == 0xFFFE || glyphCode == 0xFFFF) {
-                continue;
-            }
-
-            double targetPos = glyphVector.getGlyphPosition(i).getX();
-            double adjustment = (curPos - targetPos) / state.size * 1000;
-            if (adjustment != 0) {
-                content.append(adjustment);
-            }
-
-            byte[] b = state.fontDetails.convertToBytes(glyphVector, i, i + 1);
-            escapeAndAppendString(b, content);
-
-            curPos = targetPos + glyphVector.getGlyphMetrics(i).getAdvanceX();
-        }
-        content.append("]TJ").append_i(separator);
         /* Jaspersoft modification end */
     }
 
