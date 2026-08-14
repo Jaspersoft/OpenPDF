@@ -110,17 +110,6 @@ public class PdfVersionImp implements PdfVersion {
         }
     }
 
-    /* Jaspersoft modification start */
-    /**
-     * Returns the header version.
-     * 
-     * @return the header version
-     */
-    public String getHeaderVersion() {
-		return header_version;
-	}
-    /* Jaspersoft modification end */
-
     /**
      * @see org.openpdf.text.pdf.interfaces.PdfVersion#setAtLeastPdfVersion(String)
      */

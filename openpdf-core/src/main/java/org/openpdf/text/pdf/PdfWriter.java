@@ -1497,17 +1497,6 @@ public class PdfWriter extends DocWriter implements
         pdf_version.setPdfVersion(version);
     }
 
-    /* Jaspersoft modification start */
-    /**
-     * Returns the PDF version as a string.
-     * 
-     * @return the PDF version string
-     */
-    public String getPdfVersionString() {
-		return pdf_version.getHeaderVersion();
-	}
-    /* Jaspersoft modification end */
-
 //  [F3] adding fonts
 
     /**
