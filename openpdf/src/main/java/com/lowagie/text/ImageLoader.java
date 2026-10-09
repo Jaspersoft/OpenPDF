@@ -161,11 +161,7 @@ public class ImageLoader {
     }
 
     /**
-     * Creates an Image from an array of tiff image bytes. For JRE < 9, `ImageIO.read()` requires a supporting library
-     * in the classpath to read tiffs. Options are: - https://github.com/jai-imageio/jai-imageio-core -
-     * https://github.com/haraldk/TwelveMonkeys
-     * <p>
-     * see: https://openjdk.java.net/jeps/262
+     * Creates an Image from an array of tiff image bytes.
      *
      * @param imageData bytes of the tiff image
      * @return an objet of type <code>Image</code>

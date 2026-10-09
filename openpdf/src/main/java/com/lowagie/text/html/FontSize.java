@@ -32,7 +32,7 @@ public enum FontSize {
     }
 
     public static FontSize parse(String text) {
-        if (text == null || text.length() == 0 || !Character.isLetter(text.charAt(0))) {
+        if (text == null || text.isEmpty() || !Character.isLetter(text.charAt(0))) {
             return null;
         }
         for (FontSize fontSize : values()) {

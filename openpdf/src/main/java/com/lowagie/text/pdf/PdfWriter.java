@@ -456,65 +456,6 @@ public class PdfWriter extends DocWriter implements
      */
     public static final int ALLOW_DEGRADED_PRINTING = 4;
     /**
-     * @deprecated As of iText 2.0.7, use {@link #ALLOW_PRINTING} instead. Scheduled for removal at or after 2.2.0
-     */
-    @Deprecated
-    public static final int AllowPrinting = ALLOW_PRINTING;
-    /**
-     * @deprecated As of iText 2.0.7, use {@link #ALLOW_MODIFY_CONTENTS} instead. Scheduled for removal at or after
-     * 2.2.0
-     */
-    @Deprecated
-    public static final int AllowModifyContents = ALLOW_MODIFY_CONTENTS;
-    /**
-     * @deprecated As of iText 2.0.7, use {@link #ALLOW_COPY} instead. Scheduled for removal at or after 2.2.0
-     */
-    @Deprecated
-    public static final int AllowCopy = ALLOW_COPY;
-    /**
-     * @deprecated As of iText 2.0.7, use {@link #ALLOW_MODIFY_ANNOTATIONS} instead. Scheduled for removal at or after
-     * 2.2.0
-     */
-    @Deprecated
-    public static final int AllowModifyAnnotations = ALLOW_MODIFY_ANNOTATIONS;
-    /**
-     * @deprecated As of iText 2.0.7, use {@link #ALLOW_FILL_IN} instead. Scheduled for removal at or after 2.2.0
-     */
-    @Deprecated
-    public static final int AllowFillIn = ALLOW_FILL_IN;
-    /**
-     * @deprecated As of iText 2.0.7, use {@link #ALLOW_SCREENREADERS} instead. Scheduled for removal at or after 2.2.0
-     */
-    @Deprecated
-    public static final int AllowScreenReaders = ALLOW_SCREENREADERS;
-    /**
-     * @deprecated As of iText 2.0.7, use {@link #ALLOW_ASSEMBLY} instead. Scheduled for removal at or after 2.2.0
-     */
-    @Deprecated
-    public static final int AllowAssembly = ALLOW_ASSEMBLY;
-    /**
-     * @deprecated As of iText 2.0.7, use {@link #ALLOW_DEGRADED_PRINTING} instead. Scheduled for removal at or after
-     * 2.2.0
-     */
-    @Deprecated
-    public static final int AllowDegradedPrinting = ALLOW_DEGRADED_PRINTING;
-
-//  [C3] PdfViewerPreferences interface
-
-    // page layout (section 13.1.1 of "iText in Action")
-    /**
-     * @deprecated As of iText 2.0.7, use {@link #STANDARD_ENCRYPTION_40} instead. Scheduled for removal at or after
-     * 2.2.0
-     */
-    @Deprecated
-    public static final boolean STRENGTH40BITS = false;
-    /**
-     * @deprecated As of iText 2.0.7, use {@link #STANDARD_ENCRYPTION_128} instead. Scheduled for removal at or after
-     * 2.2.0
-     */
-    @Deprecated
-    public static final boolean STRENGTH128BITS = true;
-    /**
      * action value
      */
     public static final PdfName PAGE_OPEN = PdfName.O;
@@ -530,8 +471,6 @@ public class PdfWriter extends DocWriter implements
      * Disable the inter-character spacing.
      */
     public static final float NO_SPACE_CHAR_RATIO = 10000000f;
-
-    // page mode (section 13.1.2 of "iText in Action")
     /**
      * Use the default run direction.
      */
@@ -548,6 +487,10 @@ public class PdfWriter extends DocWriter implements
      * Use bidirectional reordering with right-to-left preferential run direction.
      */
     public static final int RUN_DIRECTION_RTL = 3;
+
+//  [C3] PdfViewerPreferences interface
+
+    // page layout (section 13.1.1 of "iText in Action")
     /**
      * Mask to separate the encryption type from the encryption mode.
      */
@@ -556,8 +499,6 @@ public class PdfWriter extends DocWriter implements
      * Stores the PDF/X level.
      */
     private final PdfXConformanceImp pdfxConformance = new PdfXConformanceImp();
-
-    // values for setting viewer preferences in iText versions older than 2.x
     /**
      * This is the list with all the images in the document.
      */
@@ -574,6 +515,8 @@ public class PdfWriter extends DocWriter implements
      * The direct content under in this document.
      */
     protected PdfContentByte directContentUnder;
+
+    // page mode (section 13.1.2 of "iText in Action")
     /**
      * body of the PDF document
      */
@@ -600,6 +543,8 @@ public class PdfWriter extends DocWriter implements
      * @since 2.1.5
      */
     protected PdfName tabs = null;
+
+    // values for setting viewer preferences in iText versions older than 2.x
     /**
      * A number referring to the previous Cross-Reference Table.
      */
@@ -617,14 +562,10 @@ public class PdfWriter extends DocWriter implements
      * Contains the business logic for cryptography.
      */
     protected PdfEncryption crypto;
-
-//  [C4] Page labels
     /**
      * Holds value of property fullCompression.
      */
     protected boolean fullCompression = false;
-
-//  [C5] named objects: named destinations, javascript, embedded files
     /**
      * The compression level of the content streams.
      *
@@ -657,16 +598,18 @@ public class PdfWriter extends DocWriter implements
      * The color number counter for the colors in the document.
      */
     protected int colorNumber = 1;
+
+//  [C4] Page labels
     /**
      * The patterns of this document
      */
     protected HashMap<PdfPatternPainter, PdfName> documentPatterns = new HashMap<>();
+
+//  [C5] named objects: named destinations, javascript, embedded files
     /**
      * The pattern number counter for the colors in the document.
      */
     protected int patternNumber = 1;
-
-    // [C6] Actions (open and additional)
     protected HashMap<PdfShadingPattern, Object> documentShadingPatterns = new HashMap<>();
     protected HashMap<PdfShading, Object> documentShadings = new HashMap<>();
     protected HashMap<PdfDictionary, PdfObject[]> documentExtGState = new LinkedHashMap<>();
@@ -681,18 +624,16 @@ public class PdfWriter extends DocWriter implements
      * An array list used to define the order of an OCG tree.
      */
     protected List<PdfOCG> documentOCGorder = new ArrayList<>();
-
-//  [C7] portable collections
     /**
      * The OCProperties in a catalog dictionary.
      */
     protected PdfOCProperties OCProperties;
-
-//  [C8] AcroForm
     /**
      * The RBGroups array in an OCG dictionary
      */
     protected PdfArray OCGRadioGroup = new PdfArray();
+
+// [C6] Actions (open and additional)
     /**
      * The locked array in an OCG dictionary
      *
@@ -708,11 +649,13 @@ public class PdfWriter extends DocWriter implements
     protected float userunit = 0f;
     protected PdfDictionary defaultColorspace = new PdfDictionary();
     protected HashMap<ColorDetails, ColorDetails> documentSpotPatterns = new HashMap<>();
-
-    //  [C9] Metadata
     protected ColorDetails patternColorspaceRGB;
     protected ColorDetails patternColorspaceGRAY;
+
+    //  [C7] portable collections
     protected ColorDetails patternColorspaceCMYK;
+
+//  [C8] AcroForm
     /**
      * Dictionary, containing all the images of the PDF document
      */
@@ -723,8 +666,6 @@ public class PdfWriter extends DocWriter implements
      * @since 2.1.5
      */
     protected HashMap<PdfStream, PdfIndirectReference> JBIG2Globals = new HashMap<>();
-
-//  [C10] PDFX Conformance
     /**
      * The <CODE>PdfPageEvent</CODE> for this document.
      */
@@ -748,6 +689,8 @@ public class PdfWriter extends DocWriter implements
      */
     protected PdfWriter() {
     }
+
+//  [C9] Metadata
 
     /**
      * Constructs a <CODE>PdfWriter</CODE>.
@@ -837,7 +780,7 @@ public class PdfWriter extends DocWriter implements
         }
     }
 
-//  [C11] Output intents
+//  [C10] PDFX Conformance
 
     /**
      * Gets the <CODE>PdfDocument</CODE> associated with this writer.
@@ -884,12 +827,6 @@ public class PdfWriter extends DocWriter implements
         }
         pdf.setLeading(leading);
     }
-
-// PDF Objects that have an impact on the PDF body
-
-//  [F1] PdfEncryptionSettings interface
-
-    // types of encryption
 
     /**
      * Use this method to get the direct content for this document. There is only one direct content, multiple calls to
@@ -950,8 +887,6 @@ public class PdfWriter extends DocWriter implements
             }
         }
     }
-    // ENCRYPTION_* = 3 reserved for implementation of the
-    // meanwhile deprecated proprietary AES256 variant by Adobe
 
     /**
      * Use this method to add a PDF object to the PDF body. Use this method only if you know what you're doing!
@@ -975,6 +910,8 @@ public class PdfWriter extends DocWriter implements
     public PdfIndirectObject addToBody(PdfObject object, boolean inObjStm) throws IOException {
         return body.add(object, inObjStm);
     }
+
+//  [C11] Output intents
 
     /**
      * Use this method to add a PDF object to the PDF body. Use this method only if you know what you're doing!
@@ -1002,8 +939,6 @@ public class PdfWriter extends DocWriter implements
         return body.add(object, ref, inObjStm);
     }
 
-    // permissions
-
     /**
      * Use this method to add a PDF object to the PDF body. Use this method only if you know what you're doing!
      *
@@ -1028,6 +963,12 @@ public class PdfWriter extends DocWriter implements
     public PdfIndirectObject addToBody(PdfObject object, int refNumber, boolean inObjStm) throws IOException {
         return body.add(object, refNumber, inObjStm);
     }
+
+// PDF Objects that have an impact on the PDF body
+
+//  [F1] PdfEncryptionSettings interface
+
+    // types of encryption
 
     /**
      * Use this to get an <CODE>PdfIndirectReference</CODE> for an object that will be created in the future. Use this
@@ -1077,6 +1018,8 @@ public class PdfWriter extends DocWriter implements
         }
         return catalog;
     }
+    // ENCRYPTION_* = 3 reserved for implementation of the
+    // meanwhile deprecated proprietary AES256 variant by Adobe
 
     /**
      * Sets extra keys to the catalog.
@@ -1141,6 +1084,8 @@ public class PdfWriter extends DocWriter implements
         }
         return ref;
     }
+
+    // permissions
 
     /**
      * Gets the pagenumber of this document. This number can be different from the real pagenumber, if you have (re)set
@@ -1219,8 +1164,6 @@ public class PdfWriter extends DocWriter implements
         currentPageNumber++;
         return null;
     }
-
-    // Strength of the encryption (kept for historical reasons)
 
     /**
      * Gets the <CODE>PdfPageEvent</CODE> for this document or <CODE>null</CODE> if none is set.
@@ -1444,6 +1387,8 @@ public class PdfWriter extends DocWriter implements
         return directContent.getRootOutline();
     }
 
+//  [F2] compression
+
     /**
      * Sets the bookmarks. The list structure is defined in {@link SimpleBookmark}.
      *
@@ -1470,12 +1415,9 @@ public class PdfWriter extends DocWriter implements
     /**
      * @see com.lowagie.text.pdf.interfaces.PdfVersion#setAtLeastPdfVersion(char)
      */
-    @Override
     public void setAtLeastPdfVersion(char version) {
         pdf_version.setAtLeastPdfVersion(version);
     }
-
-    //  [F2] compression
 
     /**
      * @see com.lowagie.text.pdf.interfaces.PdfVersion#addDeveloperExtension(com.lowagie.text.pdf.PdfDeveloperExtension)
@@ -1526,8 +1468,6 @@ public class PdfWriter extends DocWriter implements
         pdf.addViewerPreference(key, value);
     }
 
-//  [F3] adding fonts
-
     /**
      * Use this method to add page labels
      *
@@ -1536,6 +1476,8 @@ public class PdfWriter extends DocWriter implements
     public void setPageLabels(PdfPageLabels pageLabels) {
         pdf.setPageLabels(pageLabels);
     }
+
+//  [F4] adding (and releasing) form XObjects
 
     /**
      * Adds named destinations in bulk. Valid keys and values of the map can be found in the map that is created by
@@ -1584,8 +1526,6 @@ public class PdfWriter extends DocWriter implements
         pdf.addJavaScript(js);
     }
 
-//  [F4] adding (and releasing) form XObjects
-
     /**
      * Use this method to add a JavaScript action at the document level. When the document opens, all this JavaScript
      * runs.
@@ -1597,6 +1537,8 @@ public class PdfWriter extends DocWriter implements
     public void addJavaScript(String code, boolean unicode) {
         addJavaScript(PdfAction.javaScript(code, this, unicode));
     }
+
+//  [F5] adding pages imported form other PDF documents
 
     /**
      * Use this method to adds a JavaScript action at the document level. When the document opens, all this JavaScript
@@ -1631,8 +1573,6 @@ public class PdfWriter extends DocWriter implements
     public void addJavaScript(String name, String code, boolean unicode) {
         addJavaScript(name, PdfAction.javaScript(code, this, unicode));
     }
-
-//  [F5] adding pages imported form other PDF documents
 
     /**
      * Use this method to adds a JavaScript action at the document level. When the document opens, all this JavaScript
@@ -1681,6 +1621,8 @@ public class PdfWriter extends DocWriter implements
         addFileAttachment(null, fs);
     }
 
+//  [F6] spot colors
+
     /**
      * @see com.lowagie.text.pdf.interfaces.PdfDocumentActions#setOpenAction(java.lang.String)
      */
@@ -1714,8 +1656,6 @@ public class PdfWriter extends DocWriter implements
         pdf.addAdditionalAction(actionType, action);
     }
 
-//  [F6] spot colors
-
     /**
      * Use this method to add the Collection dictionary.
      *
@@ -1725,6 +1665,8 @@ public class PdfWriter extends DocWriter implements
         setAtLeastPdfVersion(VERSION_1_7);
         pdf.setCollection(collection);
     }
+
+//  [F7] document patterns
 
     /**
      * @see com.lowagie.text.pdf.interfaces.PdfAnnotations#getAcroForm()
@@ -1746,7 +1688,7 @@ public class PdfWriter extends DocWriter implements
         addAnnotation(annot);
     }
 
-//  [F7] document patterns
+//  [F8] shading patterns
 
     /**
      * @see com.lowagie.text.pdf.interfaces.PdfAnnotations#addCalculationOrder(com.lowagie.text.pdf.PdfFormField)
@@ -1764,6 +1706,8 @@ public class PdfWriter extends DocWriter implements
         pdf.setSigFlags(f);
     }
 
+//  [F9] document shadings
+
     /**
      * Use this method to set the XMP Metadata.
      *
@@ -1772,8 +1716,6 @@ public class PdfWriter extends DocWriter implements
     public void setXmpMetadata(byte[] xmpMetadata) {
         this.xmpMetadata = xmpMetadata;
     }
-
-//  [F8] shading patterns
 
     /**
      * Use this method to set the XMP Metadata for each page.
@@ -1784,14 +1726,14 @@ public class PdfWriter extends DocWriter implements
         pdf.setXmpMetadata(xmpMetadata);
     }
 
+// [F10] extended graphics state (for instance for transparency)
+
     /**
      * Use this method to creates XMP Metadata based on the metadata in the PdfDocument.
      */
     public void createXmpMetadata() {
         setXmpMetadata(createXmpMetadataBytes());
     }
-
-//  [F9] document shadings
 
     /**
      * @return an XmpMetadata byte array
@@ -1807,6 +1749,8 @@ public class PdfWriter extends DocWriter implements
         return baos.toByteArray();
     }
 
+//  [F11] adding properties (OCG, marked content)
+
     /**
      * @see com.lowagie.text.pdf.interfaces.PdfXConformance#getPDFXConformance()
      */
@@ -1814,8 +1758,6 @@ public class PdfWriter extends DocWriter implements
     public int getPDFXConformance() {
         return pdfxConformance.getPDFXConformance();
     }
-
-// [F10] extended graphics state (for instance for transparency)
 
     /**
      * @see com.lowagie.text.pdf.interfaces.PdfXConformance#setPDFXConformance(int)
@@ -1850,7 +1792,7 @@ public class PdfWriter extends DocWriter implements
         return pdfxConformance.isPdfX();
     }
 
-//  [F11] adding properties (OCG, marked content)
+//  [F12] tagged PDF
 
     public boolean isPdfA1() {
         return pdfxConformance.isPdfA1();
@@ -1920,8 +1862,6 @@ public class PdfWriter extends DocWriter implements
         setOutputIntents(outputConditionIdentifier, outputCondition, registryName, info, colorProfile);
     }
 
-//  [F12] tagged PDF
-
     /**
      * Use this method to copy the output intent dictionary from another document to this one.
      *
@@ -1964,6 +1904,8 @@ public class PdfWriter extends DocWriter implements
         return crypto;
     }
 
+//  [F13] Optional Content Groups
+
     /**
      * @see com.lowagie.text.pdf.interfaces.PdfEncryptionSettings#setEncryption(byte[], byte[], int, int)
      */
@@ -1997,72 +1939,6 @@ public class PdfWriter extends DocWriter implements
         }
         crypto.setCryptoMode(encryptionType, 0);
         crypto.getEncryptionDictionary();
-    }
-
-    /**
-     * Sets the encryption options for this document. The userPassword and the ownerPassword can be null or have zero
-     * length. In this case the ownerPassword is replaced by a random string. The open permissions for the document can
-     * be AllowPrinting, AllowModifyContents, AllowCopy, AllowModifyAnnotations, AllowFillIn, AllowScreenReaders,
-     * AllowAssembly and AllowDegradedPrinting. The permissions can be combined by ORing them.
-     *
-     * @param userPassword    the user password. Can be null or empty
-     * @param ownerPassword   the owner password. Can be null or empty
-     * @param permissions     the user permissions
-     * @param strength128Bits <code>true</code> for 128 bit key length, <code>false</code> for 40 bit key length
-     * @throws DocumentException if the document is already open
-     * @deprecated As of iText 2.0.3, replaced by (@link #setEncryption(byte[], byte[], int, int)}. Scheduled for
-     * removal at or after 2.2.0
-     */
-    @Deprecated
-    public void setEncryption(byte[] userPassword, byte[] ownerPassword, int permissions, boolean strength128Bits)
-            throws DocumentException {
-        setEncryption(userPassword, ownerPassword, permissions,
-                strength128Bits ? STANDARD_ENCRYPTION_128 : STANDARD_ENCRYPTION_40);
-    }
-
-//  [F13] Optional Content Groups
-
-    /**
-     * Sets the encryption options for this document. The userPassword and the ownerPassword can be null or have zero
-     * length. In this case the ownerPassword is replaced by a random string. The open permissions for the document can
-     * be AllowPrinting, AllowModifyContents, AllowCopy, AllowModifyAnnotations, AllowFillIn, AllowScreenReaders,
-     * AllowAssembly and AllowDegradedPrinting. The permissions can be combined by ORing them.
-     *
-     * @param strength      <code>true</code> for 128 bit key length, <code>false</code> for 40 bit key length
-     * @param userPassword  the user password. Can be null or empty
-     * @param ownerPassword the owner password. Can be null or empty
-     * @param permissions   the user permissions
-     * @throws DocumentException if the document is already open
-     * @deprecated As of iText 2.0.3, replaced by (@link #setEncryption(byte[], byte[], int, int)}. Scheduled for
-     * removal at or after 2.2.0
-     */
-    @Deprecated
-    public void setEncryption(boolean strength, String userPassword, String ownerPassword, int permissions)
-            throws DocumentException {
-        setEncryption(getISOBytes(userPassword), getISOBytes(ownerPassword), permissions,
-                strength ? STANDARD_ENCRYPTION_128 : STANDARD_ENCRYPTION_40);
-    }
-
-    /**
-     * Sets the encryption options for this document. The userPassword and the ownerPassword can be null or have zero
-     * length. In this case the ownerPassword is replaced by a random string. The open permissions for the document can
-     * be AllowPrinting, AllowModifyContents, AllowCopy, AllowModifyAnnotations, AllowFillIn, AllowScreenReaders,
-     * AllowAssembly and AllowDegradedPrinting. The permissions can be combined by ORing them.
-     *
-     * @param encryptionType the type of encryption. It can be one of STANDARD_ENCRYPTION_40, STANDARD_ENCRYPTION_128 or
-     *                       ENCRYPTION_AES128. Optionally DO_NOT_ENCRYPT_METADATA can be ored to output the metadata in
-     *                       cleartext
-     * @param userPassword   the user password. Can be null or empty
-     * @param ownerPassword  the owner password. Can be null or empty
-     * @param permissions    the user permissions
-     * @throws DocumentException if the document is already open
-     * @deprecated As of iText 2.0.3, replaced by (@link #setEncryption(byte[], byte[], int, int)}. Scheduled for
-     * removal at or after 2.2.0
-     */
-    @Deprecated
-    public void setEncryption(int encryptionType, String userPassword, String ownerPassword, int permissions)
-            throws DocumentException {
-        setEncryption(getISOBytes(userPassword), getISOBytes(ownerPassword), permissions, encryptionType);
     }
 
     /**
@@ -3479,7 +3355,7 @@ public class PdfWriter extends DocWriter implements
                 if (!(obj instanceof PdfCrossReference)) {
                     return false;
                 }
-                final PdfCrossReference other = (PdfCrossReference) obj;
+                PdfCrossReference other = (PdfCrossReference) obj;
                 return refnum == other.refnum;
             }
 

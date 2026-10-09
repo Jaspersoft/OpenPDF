@@ -36,7 +36,7 @@ import org.junit.jupiter.params.provider.MethodSource;
  */
 class FontTest {
 
-    private static final Map<Integer, Predicate<Font>> STYLES_TO_TEST_METHOD = new HashMap<Integer, Predicate<Font>>() {
+    private static final Map<Integer, Predicate<Font>> STYLES_TO_TEST_METHOD = new HashMap<>() {
         {
             put(Font.NORMAL, f -> !f.isBold() && !f.isItalic() && !f.isStrikethru() && !f.isUnderlined());
             put(Font.BOLD, Font::isBold);

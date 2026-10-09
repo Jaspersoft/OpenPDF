@@ -113,7 +113,7 @@ public class TextField extends BaseField {
     }
 
     private static boolean checkRTL(String text) {
-        if (text == null || text.length() == 0) {
+        if (text == null || text.isEmpty()) {
             return false;
         }
         char[] cc = text.toCharArray();
@@ -874,19 +874,6 @@ public class TextField extends BaseField {
      * element will be removed.
      *
      * @param selections new selections.  If null, it clear()s the underlying ArrayList.
-     * @deprecated use {@link #setChoiceSelections(List)}
-     */
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public void setChoiceSelections(ArrayList selections) {
-        setChoiceSelections((List<Integer>) selections);
-    }
-
-    /**
-     * replaces the existing selections with the param. If this field isn't a MULTISELECT list, all but the first
-     * element will be removed.
-     *
-     * @param selections new selections.  If null, it clear()s the underlying ArrayList.
      */
     public void setChoiceSelections(List<Integer> selections) {
         if (selections != null) {
@@ -916,30 +903,6 @@ public class TextField extends BaseField {
     public void setExtraMargin(float extraMarginLeft, float extraMarginTop) {
         this.extraMarginLeft = extraMarginLeft;
         this.extraMarginTop = extraMarginTop;
-    }
-
-    /**
-     * Gets the list of substitution fonts. The list is composed of <CODE>BaseFont</CODE> and can be <CODE>null</CODE>.
-     * The fonts in this list will be used if the original font doesn't contain the needed glyphs.
-     *
-     * @return the list
-     * @deprecated use {@link #getSubstitutionFontList()}
-     */
-    @Deprecated
-    public ArrayList getSubstitutionFonts() {
-        return (ArrayList) this.substitutionFonts;
-    }
-
-    /**
-     * Sets a list of substitution fonts. The list is composed of <CODE>BaseFont</CODE> and can also be
-     * <CODE>null</CODE>. The fonts in this list will be used if the original font doesn't contain the needed glyphs.
-     *
-     * @param substitutionFonts the list
-     * @deprecated use {@link #setSubstitutionFontList(List)}
-     */
-    @Deprecated
-    public void setSubstitutionFonts(List<BaseFont> substitutionFonts) {
-        this.substitutionFonts = substitutionFonts;
     }
 
     /**

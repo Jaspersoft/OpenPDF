@@ -58,7 +58,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -118,19 +117,19 @@ public class SimplePatternParser implements SimpleXMLDocHandler,
     }
 
     public static void main(String[] args) {
-        try (FileInputStream fis = new FileInputStream(args[0]);) {
-            if (args.length > 0) {
+        if (args.length > 0) {
+            try (FileInputStream fis = new FileInputStream(args[0])) {
                 SimplePatternParser pp = new SimplePatternParser();
                 pp.parse(fis, pp);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
     public void parse(InputStream stream, PatternConsumer consumer) {
         this.consumer = consumer;
-        try {
+        try (stream) {
             SimpleXMLParser.parse(this, stream);
         } catch (IOException e) {
             throw new ExceptionConverter(e);
@@ -220,16 +219,6 @@ public class SimplePatternParser implements SimpleXMLDocHandler,
 
     @Override
     public void startDocument() {
-    }
-
-    /**
-     * @deprecated use {@link SimplePatternParser#startElement(String, Map)}
-     */
-    @Override
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public void startElement(String tag, HashMap h) {
-        startElement(tag, ((Map<String, String>) h));
     }
 
     @Override

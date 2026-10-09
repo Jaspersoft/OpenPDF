@@ -188,7 +188,7 @@ public class PdfPKCS7 {
         algorithmNames.put("1.3.36.3.3.1.3", "RSA");
         algorithmNames.put("1.3.36.3.3.1.2", "RSA");
         algorithmNames.put("1.3.36.3.3.1.4", "RSA");
-        algorithmNames.put("1.2.840.10045.2.1", "ECDSA"); 
+        algorithmNames.put("1.2.840.10045.2.1", "ECDSA");
         algorithmNames.put("1.2.840.10045.4.1", "ECDSA"); //SHA1
         algorithmNames.put("1.2.840.10045.4.3", "ECDSA"); //SHA2
         algorithmNames.put("1.2.840.10045.4.3.1", "ECDSA"); //SHA224
@@ -196,7 +196,7 @@ public class PdfPKCS7 {
         algorithmNames.put("1.2.840.10045.4.3.3", "ECDSA"); //SHA384
         algorithmNames.put("1.2.840.10045.4.3.4", "ECDSA"); //SHA512
         algorithmNames.put("1.2.840.113549.1.1.10", "RSAandMGF1");
-        
+
         allowedDigests.put("MD5", "1.2.840.113549.2.5");
         allowedDigests.put("MD2", "1.2.840.113549.2.2");
         allowedDigests.put("SHA1", "1.3.14.3.2.26");
@@ -220,7 +220,7 @@ public class PdfPKCS7 {
 
         //all oids according to http://oidref.com/1.2.840.113549.1.1
         rsaOids.put("SHA256", "1.2.840.113549.1.1.11");
-        //add a 2nd time with "-" due to different crypto providers (sun vs bc) 
+        //add a 2nd time with "-" due to different crypto providers (sun vs bc)
         rsaOids.put("SHA-256", "1.2.840.113549.1.1.11");
         rsaOids.put("SHA384", "1.2.840.113549.1.1.12");
         rsaOids.put("SHA-384", "1.2.840.113549.1.1.12");
@@ -232,7 +232,7 @@ public class PdfPKCS7 {
         rsaOids.put("SHA3-256", "2.16.840.1.101.3.4.3.14");
         rsaOids.put("SHA3-384", "2.16.840.1.101.3.4.3.15");
         rsaOids.put("SHA3-512", "2.16.840.1.101.3.4.3.16");
-        
+
         dsaOids.put("SHA224", "2.16.840.1.101.3.4.3.1");
         dsaOids.put("SHA-224", "2.16.840.1.101.3.4.3.1");
         dsaOids.put("SHA256", "2.16.840.1.101.3.4.3.2");
@@ -247,7 +247,7 @@ public class PdfPKCS7 {
         dsaOids.put("SHA3-256", "2.16.840.1.101.3.4.3.6");
         dsaOids.put("SHA3-384", "2.16.840.1.101.3.4.3.7");
         dsaOids.put("SHA3-512", "2.16.840.1.101.3.4.3.8");
-        
+
         ecdsaOids.put("SHA1", "1.2.840.10045.4.1");
         ecdsaOids.put("SHA224", "1.2.840.10045.4.3.1");
         ecdsaOids.put("SHA-224", "1.2.840.10045.4.3.1");
@@ -563,12 +563,13 @@ public class PdfPKCS7 {
         }
 
         if (privKey != null) {
-         // Now we have private key, find out what the digestEncryptionAlgorithm is.
+            // Now we have private key, find out what the digestEncryptionAlgorithm is.
             String signingAlgorithm = privKey.getAlgorithm();
             this.digestEncryptionAlgorithm = getOidForAlgorithmAndHash(signingAlgorithm, hashAlgorithm);
-            
+
             if (this.digestEncryptionAlgorithm == null) {
-                throw new ExceptionConverter(new NoSuchAlgorithmException("Unknown key algorithm " + this.digestEncryptionAlgorithm + " and hash " + hashAlgorithm));
+                throw new ExceptionConverter(new NoSuchAlgorithmException(
+                        "Unknown key algorithm " + this.digestEncryptionAlgorithm + " and hash " + hashAlgorithm));
             }
         }
         if (hasRSAdata) {
@@ -590,52 +591,55 @@ public class PdfPKCS7 {
             sig.initSign(privKey);
         }
     }
-    
+
     /**
      * Determines an OID by signing and hash algorithm. If nothing is found null will be returned.
      *
-     * @param signingAlgorithm - currently RSA, DSA and ECDSA are supported. 
-     * @param hashAlgorithm like SHA1, SHA2 or SHA3
+     * @param signingAlgorithm - currently RSA, DSA and ECDSA are supported.
+     * @param hashAlgorithm    like SHA1, SHA2 or SHA3
      */
     private static String getOidForAlgorithmAndHash(String signingAlgorithm, String hashAlgorithm) {
-        
+
         String returnValue;
-        
+
         switch (signingAlgorithm) {
-            case "RSA": returnValue = rsaOids.get(hashAlgorithm);
-                        //fallback
-                        if (returnValue == null) {
-                            returnValue = ID_RSA;
-                        }
-                        break;
-            case "DSA": returnValue = dsaOids.get(hashAlgorithm);
-                        //fallback
-                        if (returnValue == null) {
-                            returnValue = ID_DSA;
-                        }
-                        break;
+            case "RSA":
+                returnValue = rsaOids.get(hashAlgorithm);
+                //fallback
+                if (returnValue == null) {
+                    returnValue = ID_RSA;
+                }
+                break;
+            case "DSA":
+                returnValue = dsaOids.get(hashAlgorithm);
+                //fallback
+                if (returnValue == null) {
+                    returnValue = ID_DSA;
+                }
+                break;
             case "EC":
-            case "ECDSA": returnValue = ecdsaOids.get(hashAlgorithm);
-                        //fallback
-                        if (returnValue == null) {
-                            returnValue = ID_ECDSA;
-                        }
-                        break;
-            default: returnValue = null;
+            case "ECDSA":
+                returnValue = ecdsaOids.get(hashAlgorithm);
+                //fallback
+                if (returnValue == null) {
+                    returnValue = ID_ECDSA;
+                }
+                break;
+            default:
+                returnValue = null;
         }
-        
+
         if (returnValue == null) {
             //nothing found so check BC
             DefaultSignatureAlgorithmIdentifierFinder finder = new DefaultSignatureAlgorithmIdentifierFinder();
             try {
                 AlgorithmIdentifier id = finder.find(hashAlgorithm + "with" + signingAlgorithm);
                 returnValue = id.getAlgorithm().getId();
-            }
-            catch (IllegalArgumentException iae) {
+            } catch (IllegalArgumentException iae) {
                 //it was just a try, return null then
             }
         }
-        
+
         return returnValue;
     }
 
@@ -1334,10 +1338,12 @@ public class PdfPKCS7 {
         this.externalRSAdata = RSAdata;
         if (digestEncryptionAlgorithm != null) {
             String hashAlgorithm = getHashAlgorithm();
-            this.digestEncryptionAlgorithm = PdfPKCS7.getOidForAlgorithmAndHash(digestEncryptionAlgorithm, hashAlgorithm);
-            
+            this.digestEncryptionAlgorithm = PdfPKCS7.getOidForAlgorithmAndHash(digestEncryptionAlgorithm,
+                    hashAlgorithm);
+
             if (this.digestEncryptionAlgorithm == null) {
-                throw new ExceptionConverter(new NoSuchAlgorithmException("Unknown key algorithm " + digestEncryptionAlgorithm + " hash " + hashAlgorithm));
+                throw new ExceptionConverter(new NoSuchAlgorithmException(
+                        "Unknown key algorithm " + digestEncryptionAlgorithm + " hash " + hashAlgorithm));
             }
         }
     }
@@ -1796,8 +1802,6 @@ public class PdfPKCS7 {
         /**
          * A HashMap with default symbols
          */
-        @Deprecated
-        public static HashMap DefaultSymbols = new HashMap();
         public static Map<ASN1Encodable, String> defaultSymbols = new HashMap<>();
 
         static {
@@ -1817,14 +1821,11 @@ public class PdfPKCS7 {
             defaultSymbols.put(INITIALS, "INITIALS");
             defaultSymbols.put(GENERATION, "GENERATION");
 
-            DefaultSymbols.putAll(defaultSymbols);
         }
 
         /**
          * A HashMap with values
          */
-        @Deprecated
-        public HashMap values = new HashMap();
         public Map<String, List<String>> valuesMap = new HashMap<>();
 
         /**
@@ -1885,34 +1886,11 @@ public class PdfPKCS7 {
         /**
          * gets a field array from the values Hashmap
          *
-         * @param name the name of the field to get
-         * @return an ArrayList
-         * @deprecated use {@link #getFieldsByName(String)}
-         */
-        @Deprecated
-        public ArrayList getFieldArray(String name) {
-            return (ArrayList) valuesMap.get(name);
-        }
-
-        /**
-         * gets a field array from the values Hashmap
-         *
          * @param name the name of the field array to get
          * @return an ArrayList
          */
         public List<String> getFieldsByName(String name) {
             return valuesMap.get(name);
-        }
-
-        /**
-         * getter for values
-         *
-         * @return a HashMap with the fields of the X509 name
-         * @deprecated use {@link #getAllFields()}
-         */
-        @Deprecated
-        public HashMap getFields() {
-            return (HashMap) valuesMap;
         }
 
         /**

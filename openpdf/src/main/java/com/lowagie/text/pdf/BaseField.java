@@ -312,16 +312,6 @@ public abstract class BaseField {
         return app;
     }
 
-    /**
-     * @param text text
-     * @return an {@link ArrayList} of {@link String}
-     * @deprecated use {@link BaseField#getAllHardBreaks(String)}
-     */
-    @Deprecated
-    protected static ArrayList getHardBreaks(String text) {
-        return (ArrayList) getAllHardBreaks(text);
-    }
-
     protected static List<String> getAllHardBreaks(String text) {
         List<String> arr = new ArrayList<>();
         char[] cs = text.toCharArray();
@@ -357,12 +347,6 @@ public abstract class BaseField {
             }
             buf.setLength(len);
         }
-    }
-
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    protected static ArrayList breakLines(ArrayList breaks, BaseFont font, float fontSize, float width) {
-        return (ArrayList) breakLines((List<String>) breaks, font, fontSize, width);
     }
 
     protected static List<String> breakLines(List<String> breaks, BaseFont font, float fontSize, float width) {

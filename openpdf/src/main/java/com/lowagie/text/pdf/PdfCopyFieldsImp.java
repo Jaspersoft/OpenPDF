@@ -313,15 +313,6 @@ class PdfCopyFieldsImp extends PdfWriter {
         }
     }
 
-    /**
-     * @deprecated use {@link PdfCopyFieldsImp#branchForm(Map, PdfIndirectReference, String)}
-     */
-    @Deprecated
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    protected PdfArray branchForm(HashMap level, PdfIndirectReference parent, String fname) throws IOException {
-        return branchForm((Map<String, Object>) level, parent, fname);
-    }
-
     protected PdfArray branchForm(Map<String, Object> level, PdfIndirectReference parent, String fname)
             throws IOException {
         PdfArray arr = new PdfArray();

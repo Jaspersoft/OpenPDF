@@ -277,30 +277,6 @@ public class Cell extends TableRectangle implements TextElementArray, WithHorizo
         return horizontalAlignment;
     }
 
-    /**
-     * Sets the horizontal alignment.
-     *
-     * @param value the new value
-     * @deprecated Setting alignment through unconstrained types is non-obvious and error-prone, use
-     * {@link Cell#setHorizontalAlignment(HorizontalAlignment)} instead
-     */
-    @Deprecated
-    public void setHorizontalAlignment(int value) {
-        horizontalAlignment = value;
-    }
-
-    /**
-     * Sets the alignment of this cell. This methods allows you to set the alignment as a String.
-     *
-     * @param alignment the new alignment as a <CODE>String</CODE>
-     * @deprecated Setting alignment through unconstrained types is non-obvious and error-prone, use
-     * {@link Cell#setHorizontalAlignment(HorizontalAlignment)} instead
-     */
-    @Deprecated
-    public void setHorizontalAlignment(String alignment) {
-        setHorizontalAlignment(ElementTags.alignmentValue(alignment));
-    }
-
     @Override
     public void setHorizontalAlignment(final HorizontalAlignment alignment) {
         if (alignment == null) {
@@ -317,30 +293,6 @@ public class Cell extends TableRectangle implements TextElementArray, WithHorizo
      */
     public int getVerticalAlignment() {
         return verticalAlignment;
-    }
-
-    /**
-     * Sets the vertical alignment.
-     *
-     * @param value the new value
-     * @deprecated Setting alignment through unconstrained types is non-obvious and error-prone, use
-     * {@link Cell#setVerticalAlignment(VerticalAlignment)} instead
-     */
-    @Deprecated
-    public void setVerticalAlignment(int value) {
-        verticalAlignment = value;
-    }
-
-    /**
-     * Sets the alignment of this paragraph.
-     *
-     * @param alignment the new alignment as a <CODE>String</CODE>
-     * @deprecated Setting alignment through unconstrained types is non-obvious and error-prone, use
-     * {@link Cell#setVerticalAlignment(VerticalAlignment)} instead
-     */
-    @Deprecated
-    public void setVerticalAlignment(String alignment) {
-        setVerticalAlignment(ElementTags.alignmentValue(alignment));
     }
 
     @Override

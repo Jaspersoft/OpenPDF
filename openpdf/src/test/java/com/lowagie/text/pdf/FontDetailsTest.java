@@ -25,4 +25,5 @@ class FontDetailsTest {
         assertThat(bytes).hasSize(22);
         assertThat(fontDetails.isSubset()).isTrue();
     }
+
 }

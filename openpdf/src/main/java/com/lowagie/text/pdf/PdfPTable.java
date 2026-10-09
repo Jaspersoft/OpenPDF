@@ -187,9 +187,8 @@ public class PdfPTable implements LargeElement {
      */
     public PdfPTable(float[] relativeWidths) {
         if (relativeWidths == null) {
-            throw new NullPointerException(
-                    MessageLocalization.getComposedMessage(
-                            "the.widths.array.in.pdfptable.constructor.can.not.be.null"));
+            throw new NullPointerException(MessageLocalization.getComposedMessage(
+                    "the.widths.array.in.pdfptable.constructor.can.not.be.null"));
         }
         if (relativeWidths.length == 0) {
             throw new IllegalArgumentException(MessageLocalization.getComposedMessage(
@@ -498,7 +497,7 @@ public class PdfPTable implements LargeElement {
      *
      * @param cell the cell element
      */
-    public void addCell(PdfPCell cell) {
+    public PdfPCell addCell(PdfPCell cell) {
         rowCompleted = false;
         PdfPCell ncell = new PdfPCell(cell);
 
@@ -556,6 +555,8 @@ public class PdfPTable implements LargeElement {
             currentRow[currentRowIdx] = ncell;
             currentRowIdx += colspan;
         }
+
+        return ncell;
     }
 
     /**
@@ -645,8 +646,8 @@ public class PdfPTable implements LargeElement {
      *
      * @param text the text for the cell
      */
-    public void addCell(String text) {
-        addCell(new Phrase(text));
+    public PdfPCell addCell(String text) {
+        return addCell(new Phrase(text));
     }
 
     /**
@@ -654,10 +655,11 @@ public class PdfPTable implements LargeElement {
      *
      * @param table the table to be added to the cell
      */
-    public void addCell(PdfPTable table) {
+    public PdfPCell addCell(PdfPTable table) {
         defaultCell.setTable(table);
         addCell(defaultCell);
         defaultCell.setTable(null);
+        return defaultCell;
     }
 
     /**
@@ -665,10 +667,11 @@ public class PdfPTable implements LargeElement {
      *
      * @param image the <CODE>Image</CODE> to add to the table. This image will fit in the cell
      */
-    public void addCell(Image image) {
+    public PdfPCell addCell(Image image) {
         defaultCell.setImage(image);
         addCell(defaultCell);
         defaultCell.setImage(null);
+        return defaultCell;
     }
 
     /**
@@ -676,10 +679,11 @@ public class PdfPTable implements LargeElement {
      *
      * @param phrase the <CODE>Phrase</CODE> to be added to the cell
      */
-    public void addCell(Phrase phrase) {
+    public PdfPCell addCell(Phrase phrase) {
         defaultCell.setPhrase(phrase);
         addCell(defaultCell);
         defaultCell.setPhrase(null);
+        return defaultCell;
     }
 
     /**

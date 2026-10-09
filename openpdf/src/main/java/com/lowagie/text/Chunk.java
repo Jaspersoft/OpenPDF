@@ -298,6 +298,8 @@ public class Chunk implements Element {
                 offsetY, Boolean.FALSE});
     }
 
+    // the attributes are ordered as they appear in the book 'iText in Action'
+
     /**
      * Creates a separator Chunk. Note that separator chunks can't be used in combination with tab chunks!
      *
@@ -319,8 +321,6 @@ public class Chunk implements Element {
         this(OBJECT_REPLACEMENT_CHARACTER, new Font());
         setAttribute(SEPARATOR, new Object[]{separator, vertical});
     }
-
-    // the attributes are ordered as they appear in the book 'iText in Action'
 
     /**
      * Creates a tab Chunk. Note that separator chunks can't be used in combination with tab chunks!
@@ -480,31 +480,6 @@ public class Chunk implements Element {
 
     public boolean hasAttributes() {
         return attributes != null;
-    }
-
-    /**
-     * Gets the attributes for this <CODE>Chunk</CODE>.
-     * <p>
-     * It may be null.
-     *
-     * @return the attributes for this <CODE>Chunk</CODE>
-     * @deprecated use {@link #getChunkAttributes()}
-     */
-    @Deprecated
-    public HashMap getAttributes() {
-        return (HashMap) attributes;
-    }
-
-    /**
-     * Sets the attributes all at once.
-     *
-     * @param attributes the attributes of a Chunk
-     * @deprecated use {@link #setChunkAttributes(Map)}
-     */
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public void setAttributes(HashMap attributes) {
-        this.attributes = attributes;
     }
 
     /**

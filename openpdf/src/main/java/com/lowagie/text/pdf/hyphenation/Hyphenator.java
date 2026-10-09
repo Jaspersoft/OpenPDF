@@ -117,7 +117,6 @@ public class Hyphenator {
         return stream;
     }
 
-
     /**
      * @param key The language to get the tree from
      * @return a hyphenation tree or null

@@ -59,18 +59,6 @@ public class StyleSheet {
     private final Map<String, Map<String, String>> classMap = new HashMap<>();
     private final Map<String, Map<String, String>> tagMap = new HashMap<>();
 
-    /**
-     * @param props a HashMap
-     * @param tag   the tag
-     * @deprecated please use #applyStyle(String tag, Map&lt;String, String&gt; props) this method will be removed in
-     * 2.0
-     */
-    @Deprecated
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public void applyStyle(String tag, HashMap props) {
-        applyStyle(tag, (Map<String, String>) props);
-    }
-
     public void applyStyle(String tag, Map<String, String> props) {
         Map<String, String> map = tagMap.get(tag.toLowerCase());
         if (map != null) {

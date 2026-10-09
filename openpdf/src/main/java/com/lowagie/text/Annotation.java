@@ -582,17 +582,6 @@ public class Annotation implements Element {
      * Gets the content of this <CODE>Annotation</CODE>.
      *
      * @return a reference
-     * @deprecated use {@link #getAttributes()}
-     */
-    @Deprecated
-    public HashMap attributes() {
-        return (HashMap) annotationAttributes;
-    }
-
-    /**
-     * Gets the content of this <CODE>Annotation</CODE>.
-     *
-     * @return a reference
      */
     public Map<String, Object> getAttributes() {
         return annotationAttributes;

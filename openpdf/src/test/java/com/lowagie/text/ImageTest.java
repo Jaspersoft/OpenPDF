@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
 import org.junit.jupiter.api.Test;
 
 class ImageTest {
@@ -86,9 +84,13 @@ class ImageTest {
     }
 
     private byte[] readFileBytes() throws IOException {
-        String name = "src/test/resources/imageTest/ImageTest.png";
-        Path path = Paths.get(name);
-        return Files.readAllBytes(path);
+        byte[] bytes = null;
+        try (InputStream stream = this.getClass().getResourceAsStream("/imageTest/ImageTest.png")) {
+            if (stream != null) {
+                bytes = stream.readAllBytes();
+            }
+        }
+        return bytes;
     }
 
 }

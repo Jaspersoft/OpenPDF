@@ -283,20 +283,6 @@ public final class SimpleBookmark implements SimpleXMLDocHandler {
      *
      * @param reader the document
      * @return a <CODE>List</CODE> with the bookmarks or <CODE>null</CODE> if the document doesn't have any
-     * @deprecated use {@link #getBookmarkList(PdfReader)}
-     */
-    @Deprecated
-    @SuppressWarnings("rawtypes")
-    public static List getBookmark(PdfReader reader) {
-        return getBookmarkList(reader);
-    }
-
-    /**
-     * Gets a <CODE>List</CODE> with the bookmarks. It returns <CODE>null</CODE> if the document doesn't have any
-     * bookmarks.
-     *
-     * @param reader the document
-     * @return a <CODE>List</CODE> with the bookmarks or <CODE>null</CODE> if the document doesn't have any
      */
     public static List<Map<String, Object>> getBookmarkList(PdfReader reader) {
         PdfDictionary catalog = reader.getCatalog();
@@ -368,21 +354,6 @@ public final class SimpleBookmark implements SimpleXMLDocHandler {
                 }
             }
         }
-    }
-
-    /**
-     * For the pages in range add the <CODE>pageShift</CODE> to the page number. The page ranges consists of a number of
-     * pairs with the start/end page range. The page numbers are inclusive.
-     *
-     * @param list      the bookmarks
-     * @param pageShift the number to add to the pages in range
-     * @param pageRange the page ranges, always in pairs. It can be <CODE>null</CODE> to include all the pages
-     * @deprecated use {@link #shiftPageNumbersInRange(List, int, int[])}
-     */
-    @Deprecated
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static void shiftPageNumbers(List list, int pageShift, int[] pageRange) {
-        shiftPageNumbersInRange(list, pageShift, pageRange);
     }
 
     /**
@@ -791,15 +762,6 @@ public final class SimpleBookmark implements SimpleXMLDocHandler {
     }
 
     public void startDocument() {
-    }
-
-    /**
-     * @deprecated user {@link SimpleBookmark#startElement(String, Map)}
-     */
-    @Deprecated
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public void startElement(String tag, HashMap h) {
-        startElement(tag, (Map<String, String>) h);
     }
 
     public void startElement(String tag, Map<String, String> h) {

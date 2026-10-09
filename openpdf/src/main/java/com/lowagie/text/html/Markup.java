@@ -492,6 +492,7 @@ public class Markup {
                 return fs.getScale() * DEFAULT_FONT_SIZE;
             }
         }
+
         int pos = 0;
         int length = string.length();
         boolean ok = true;

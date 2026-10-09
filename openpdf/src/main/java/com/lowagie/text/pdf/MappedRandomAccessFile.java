@@ -51,14 +51,13 @@ package com.lowagie.text.pdf;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 /**
  * A {@link java.nio.MappedByteBuffer} wrapped as a {@link java.io.RandomAccessFile}
@@ -102,49 +101,25 @@ public class MappedRandomAccessFile implements AutoCloseable {
         if (buffer == null || !buffer.isDirect()) {
             return false;
         }
+        return cleanJava11(buffer);
 
-        if (cleanJava9(buffer)) {
-            return true;
+    }
+
+    private static boolean cleanJava11(final ByteBuffer buffer) {
+        Boolean success = Boolean.FALSE;
+        try {
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
+            Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+            MethodHandle methodHandle = lookup.findStatic(unsafeClass, "getUnsafe", MethodType.methodType(unsafeClass));
+            Object theUnsafe = methodHandle.invoke();
+            MethodHandle invokeCleanerMethod = lookup.findVirtual(unsafeClass, "invokeCleaner",
+                    MethodType.methodType(void.class, ByteBuffer.class));
+            invokeCleanerMethod.invoke(theUnsafe, buffer);
+            success = Boolean.TRUE;
+        } catch (Throwable ignore) {
+            // Ignore
         }
-        return cleanOldsJDK(buffer);
-    }
-
-    private static boolean cleanOldsJDK(final java.nio.ByteBuffer buffer) {
-        return AccessController.doPrivileged((PrivilegedAction<Boolean>) () -> {
-            Boolean success = Boolean.FALSE;
-            try {
-                Method getCleanerMethod = buffer.getClass().getMethod("cleaner", (Class[]) null);
-                if (!getCleanerMethod.isAccessible()) {
-                    getCleanerMethod.setAccessible(true);
-                }
-                Object cleaner = getCleanerMethod.invoke(buffer, (Object[]) null);
-                Method clean = cleaner.getClass().getMethod("clean", (Class[]) null);
-                clean.invoke(cleaner, (Object[]) null);
-                success = Boolean.TRUE;
-            } catch (Exception e) {
-                // Ignore
-            }
-            return success;
-        });
-    }
-
-    private static boolean cleanJava9(final java.nio.ByteBuffer buffer) {
-        return AccessController.doPrivileged((PrivilegedAction<Boolean>) () -> {
-            Boolean success = Boolean.FALSE;
-            try {
-                final Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
-                final Field theUnsafeField = unsafeClass.getDeclaredField("theUnsafe");
-                theUnsafeField.setAccessible(true);
-                final Object theUnsafe = theUnsafeField.get(null);
-                final Method invokeCleanerMethod = unsafeClass
-                        .getMethod("invokeCleaner", ByteBuffer.class);
-                invokeCleanerMethod.invoke(theUnsafe, buffer);
-                success = Boolean.TRUE;
-            } catch (Exception ignore) {
-                // Ignore
-            }
-            return success;
-        });
+        return success;
     }
 
     /**
@@ -255,10 +230,10 @@ public class MappedRandomAccessFile implements AutoCloseable {
      * @see java.lang.Object#finalize()
      */
     @Override
+    @Deprecated(since = "OpenPDF-2.0.2", forRemoval = true)
     protected void finalize() throws Throwable {
         close();
         super.finalize();
     }
-
 
 }

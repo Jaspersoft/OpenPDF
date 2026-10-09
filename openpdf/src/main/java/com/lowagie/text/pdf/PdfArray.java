@@ -242,17 +242,6 @@ public class PdfArray extends PdfObject {
      * Get a copy the internal list for this PdfArray.
      *
      * @return a copy of the the internal List.
-     * @deprecated Please use getElements() instead.
-     */
-    @Deprecated
-    public List<PdfObject> getArrayList() {
-        return getElements();
-    }
-
-    /**
-     * Get a copy the internal list for this PdfArray.
-     *
-     * @return a copy of the the internal List.
      */
     public List<PdfObject> getElements() {
         return new ArrayList<>(arrayList);

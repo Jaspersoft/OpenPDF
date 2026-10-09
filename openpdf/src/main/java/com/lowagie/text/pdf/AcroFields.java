@@ -707,7 +707,7 @@ public class AcroFields {
     }
 
     public void decodeGenericDictionary(PdfDictionary merged, BaseField tx) throws DocumentException {
-        int flags;
+        int flags = 0;
         // the text size and color
         PdfString da = merged.getAsString(PdfName.DA);
         if (da != null) {
@@ -897,9 +897,8 @@ public class AcroFields {
             return tx.getAppearance();
         }
         if (!PdfName.CH.equals(fieldType)) {
-            throw new DocumentException(
-                    MessageLocalization.getComposedMessage(
-                            "an.appearance.was.requested.without.a.variable.text.field"));
+            throw new DocumentException(MessageLocalization.getComposedMessage(
+                    "an.appearance.was.requested.without.a.variable.text.field"));
         }
         PdfArray opt = merged.getAsArray(PdfName.OPT);
         int flags = 0;
@@ -1240,7 +1239,7 @@ public class AcroFields {
                             PdfAppearance cb = new PdfAppearance(this.writer);
                             if (dao[DA_FONT] != null) {
                                 ByteBuffer buf = cb.getInternalBuffer();
-                                float fontSize = (float) Font.DEFAULTSIZE;
+                                Float fontSize = (float) Font.DEFAULTSIZE;
                                 if (value != null) {
                                     fontSize = (Float) value;
                                 }
@@ -1589,6 +1588,55 @@ public class AcroFields {
     }
 
     /**
+     * Sets the fields by FDF merging.
+     *
+     * @param fdf the FDF form
+     * @throws IOException       on error
+     * @throws DocumentException on error
+     */
+    public void setFields(FdfReader fdf) throws IOException, DocumentException {
+        Map<String, PdfDictionary> fd = fdf.getAllFields();
+        for (String f : fd.keySet()) {
+            String v = fdf.getFieldValue(f);
+            if (v != null) {
+                setField(f, v);
+            }
+        }
+    }
+
+    /**
+     * Allows merging the fields by a field reader. One use would be to set the fields by XFDF merging.
+     *
+     * @param fieldReader The fields to merge.
+     * @throws IOException       on error
+     * @throws DocumentException on error
+     */
+    public void setFields(XfdfReader fieldReader) throws IOException, DocumentException {
+        setFields((FieldReader) fieldReader);
+    }
+
+    /**
+     * Allows merging the fields by a field reader. One use would be to set the fields by XFDF merging.
+     *
+     * @param fieldReader The fields to merge.
+     * @throws IOException       on error
+     * @throws DocumentException on error
+     */
+    public void setFields(FieldReader fieldReader) throws IOException, DocumentException {
+        Map<String, String> fd = fieldReader.getAllFields();
+        for (String f : fd.keySet()) {
+            String v = fieldReader.getFieldValue(f);
+            if (v != null) {
+                setField(f, v);
+            }
+            List<String> list = fieldReader.getListValues(f);
+            if (list != null) {
+                setListSelection(v, list.toArray(new String[0]));
+            }
+        }
+    }
+
+    /**
      * Regenerates the field appearance. This is useful when you change a field property, but not its value, for
      * instance form.setFieldProperty("f", "bgcolor", Color.BLUE, null); This won't have any effect, unless you use
      * regenerateField("f") after changing the property.
@@ -1818,67 +1866,6 @@ public class AcroFields {
         }
         PdfDictionary NDic = appDic.getAsDict(PdfName.N);
         return (NDic != null && NDic.get(check) != null);
-    }
-
-    /**
-     * Gets all the fields. The fields are keyed by the fully qualified field name and the value is an instance of
-     * <CODE>AcroFields.Item</CODE>.
-     *
-     * @return all the fields
-     * @deprecated use {@link AcroFields#getAllFields()}
-     */
-    @Deprecated
-    public HashMap getFields() {
-        return (HashMap) fields;
-    }
-
-    /**
-     * Sets the fields by FDF merging.
-     *
-     * @param fdf the FDF form
-     * @throws IOException       on error
-     * @throws DocumentException on error
-     */
-    public void setFields(FdfReader fdf) throws IOException, DocumentException {
-        Map<String, PdfDictionary> fd = fdf.getAllFields();
-        for (String f : fd.keySet()) {
-            String v = fdf.getFieldValue(f);
-            if (v != null) {
-                setField(f, v);
-            }
-        }
-    }
-
-    /**
-     * Allows merging the fields by a field reader. One use would be to set the fields by XFDF merging.
-     *
-     * @param fieldReader The fields to merge.
-     * @throws IOException       on error
-     * @throws DocumentException on error
-     */
-    public void setFields(XfdfReader fieldReader) throws IOException, DocumentException {
-        setFields((FieldReader) fieldReader);
-    }
-
-    /**
-     * Allows merging the fields by a field reader. One use would be to set the fields by XFDF merging.
-     *
-     * @param fieldReader The fields to merge.
-     * @throws IOException       on error
-     * @throws DocumentException on error
-     */
-    public void setFields(FieldReader fieldReader) throws IOException, DocumentException {
-        Map<String, String> fd = fieldReader.getAllFields();
-        for (String f : fd.keySet()) {
-            String v = fieldReader.getFieldValue(f);
-            if (v != null) {
-                setField(f, v);
-            }
-            List<String> list = fieldReader.getListValues(f);
-            if (list != null) {
-                setListSelection(v, list.toArray(new String[0]));
-            }
-        }
     }
 
     /**
@@ -2136,17 +2123,6 @@ public class AcroFields {
      * Gets the field names that have signatures and are signed.
      *
      * @return the field names that have signatures and are signed
-     * @deprecated user {@link AcroFields#getSignedFieldNames()}
-     */
-    @Deprecated
-    public ArrayList<String> getSignatureNames() {
-        return (ArrayList<String>) getSignedFieldNames();
-    }
-
-    /**
-     * Gets the field names that have signatures and are signed.
-     *
-     * @return the field names that have signatures and are signed
      */
     public List<String> getSignedFieldNames() {
         if (sigNames != null) {
@@ -2302,17 +2278,6 @@ public class AcroFields {
      * Gets the field names that have blank signatures.
      *
      * @return the field names that have blank signatures
-     * @deprecated use {@link AcroFields#getFieldNamesWithBlankSignatures()}
-     */
-    @Deprecated
-    public ArrayList getBlankSignatureNames() {
-        return (ArrayList) getFieldNamesWithBlankSignatures();
-    }
-
-    /**
-     * Gets the field names that have blank signatures.
-     *
-     * @return the field names that have blank signatures
      */
     public List<String> getFieldNamesWithBlankSignatures() {
         getSignedFieldNames();
@@ -2433,7 +2398,7 @@ public class AcroFields {
         try {
             PdfName sub = v.getAsName(PdfName.SUBFILTER);
             PdfString contents = v.getAsString(PdfName.CONTENTS);
-            PdfPKCS7 pk;
+            PdfPKCS7 pk = null;
             if (sub.equals(PdfName.ADBE_X509_RSA_SHA1)) {
                 PdfString cert = v.getAsString(PdfName.CERT);
                 pk = new PdfPKCS7(contents.getOriginalBytes(), cert.getBytes(), provider);
@@ -2568,50 +2533,6 @@ public class AcroFields {
      * Gets the appearances cache.
      *
      * @return the appearances cache
-     * @since 2.1.5  this method used to return a HashMap
-     * @deprecated use {@link AcroFields#getFieldCacheMap()}
-     */
-    @Deprecated
-    public Map getFieldCache() {
-        return fieldCache;
-    }
-
-    /**
-     * Sets a cache for field appearances. Parsing the existing PDF to create a new TextField is time expensive. For
-     * those tasks that repeatedly fill the same PDF with different field values the use of the cache has dramatic speed
-     * advantages. An example usage:
-     *
-     * <pre>
-     * String pdfFile = ...;// the pdf file used as template
-     * ArrayList xfdfFiles = ...;// the xfdf file names
-     * ArrayList pdfOutFiles = ...;// the output file names, one for each element in xpdfFiles
-     * HashMap cache = new HashMap();// the appearances cache
-     * PdfReader originalReader = new PdfReader(pdfFile);
-     * for (int k = 0; k &lt; xfdfFiles.size(); ++k) {
-     *    PdfReader reader = new PdfReader(originalReader);
-     *    XfdfReader xfdf = new XfdfReader((String)xfdfFiles.get(k));
-     *    PdfStamper stp = new PdfStamper(reader, new FileOutputStream((String)pdfOutFiles.get(k)));
-     *    AcroFields af = stp.getAcroFields();
-     *    af.setFieldCache(cache);
-     *    af.setFields(xfdf);
-     *    stp.close();
-     * }
-     * </pre>
-     *
-     * @param fieldCache a Map that will carry the cached appearances
-     * @since 2.1.5  this method used to take a HashMap as parameter
-     * @deprecated use {@link AcroFields#setFieldCacheMap(Map)}
-     */
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public void setFieldCache(Map fieldCache) {
-        this.fieldCache = fieldCache;
-    }
-
-    /**
-     * Gets the appearances cache.
-     *
-     * @return the appearances cache
      */
     public Map<String, BaseField> getFieldCacheMap() {
         return fieldCache;
@@ -2667,31 +2588,6 @@ public class AcroFields {
             substitutionFonts = new ArrayList<>();
         }
         substitutionFonts.add(font);
-    }
-
-    /**
-     * Gets the list of substitution fonts. The list is composed of <CODE>BaseFont</CODE> and can be <CODE>null</CODE>.
-     * The fonts in this list will be used if the original font doesn't contain the needed glyphs.
-     *
-     * @return the list
-     * @deprecated use {@link AcroFields#getAllSubstitutionFonts()}
-     */
-    @Deprecated
-    public ArrayList getSubstitutionFonts() {
-        return (ArrayList) substitutionFonts;
-    }
-
-    /**
-     * Sets a list of substitution fonts. The list is composed of <CODE>BaseFont</CODE> and can also be
-     * <CODE>null</CODE>. The fonts in this list will be used if the original font doesn't contain the needed glyphs.
-     *
-     * @param substitutionFonts the list
-     * @deprecated use {@link AcroFields#setAllSubstitutionFonts(List)}
-     */
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public void setSubstitutionFonts(ArrayList substitutionFonts) {
-        this.substitutionFonts = substitutionFonts;
     }
 
     /**
@@ -2911,55 +2807,35 @@ public class AcroFields {
          *
          * @since 2.1.5
          */
-
         public static final int WRITE_VALUE = 4;
+        /**
+         * An array of <CODE>PdfDictionary</CODE> where the value tag /V is present.
+         */
+        ArrayList<PdfDictionary> values = new ArrayList<>();
+        /**
+         * An array of <CODE>PdfDictionary</CODE> with the widgets.
+         */
+        ArrayList<PdfDictionary> widgets = new ArrayList<>();
+        /**
+         * An array of <CODE>PdfDictionary</CODE> with the widget references.
+         */
+        ArrayList<PdfIndirectReference> widgetRefs = new ArrayList<>();
+        /**
+         * An array of <CODE>PdfDictionary</CODE> with all the field and widget tags merged.
+         */
+        ArrayList<PdfDictionary> merged = new ArrayList<>();
+        /**
+         * An array of <CODE>Integer</CODE> with the page numbers where the widgets are displayed.
+         */
+        ArrayList<Integer> page = new ArrayList<>();
+        /**
+         * An array of <CODE>Integer</CODE> with the tab order of the field in the page.
+         */
+        ArrayList<Integer> tabOrder = new ArrayList<>();
         /**
          * The indirect reference of the item itself
          */
-        private final PdfIndirectReference fieldReference;
-        /**
-         * An array of <CODE>PdfDictionary</CODE> where the value tag /V is present.
-         *
-         * @deprecated (will remove ' public ' in the future)
-         */
-        @Deprecated
-        public ArrayList<PdfDictionary> values = new ArrayList<>();
-        /**
-         * An array of <CODE>PdfDictionary</CODE> with the widgets.
-         *
-         * @deprecated (will remove ' public ' in the future)
-         */
-        @Deprecated
-        public ArrayList<PdfDictionary> widgets = new ArrayList<>();
-        /**
-         * An array of <CODE>PdfDictionary</CODE> with the widget references.
-         *
-         * @deprecated (will remove ' public ' in the future)
-         */
-        @Deprecated
-        public ArrayList<PdfIndirectReference> widgetRefs = new ArrayList<>();
-        /**
-         * An array of <CODE>PdfDictionary</CODE> with all the field and widget tags merged.
-         *
-         * @deprecated (will remove ' public ' in the future)
-         */
-        @Deprecated
-        public ArrayList<PdfDictionary> merged = new ArrayList<>();
-        /**
-         * An array of <CODE>Integer</CODE> with the page numbers where the widgets are displayed.
-         *
-         * @deprecated (will remove ' public ' in the future)
-         */
-        @Deprecated
-        public ArrayList<Integer> page = new ArrayList<>();
-        /**
-         * An array of <CODE>Integer</CODE> with the tab order of the field in the page.
-         *
-         * @deprecated (will remove ' public ' in the future)
-         */
-        @Deprecated
-        public ArrayList<Integer> tabOrder = new ArrayList<>();
-
+        private PdfIndirectReference fieldReference;
 
         public Item(PdfIndirectReference ref) {
             this.fieldReference = ref;
